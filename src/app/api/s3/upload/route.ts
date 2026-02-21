@@ -19,8 +19,8 @@ export async function POST(request: Request) {
 
     if (!valdation.success) {
       return NextResponse.json(
-        { error: "Invalid request body" },
-        { status: 400 }
+        { error: "부적합한 요청 데이터입니다." },
+        { status: 400 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     });
 
     const presignedUrl = await getSignedUrl(S3, command, {
-      expiresIn: 360, //6min
+      expiresIn: 360, // 6분
     });
 
     const response = {
@@ -46,9 +46,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(response, { status: 200 });
   } catch {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "내부 서버 에러" }, { status: 500 });
   }
 }

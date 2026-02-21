@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ToggleTheme";
+import { NavTabs } from "@/components/NavTabs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +40,12 @@ export default function RootLayout({
           <div className="fixed top-4 right-4">
             <ThemeToggle />
           </div>
-          {children}
+          <div className="max-w-2xl mx-auto flex flex-col items-center px-4">
+            <div className="w-full pt-8 pb-4">
+              <NavTabs />
+            </div>
+            {children}
+          </div>
           <Toaster richColors closeButton />
         </ThemeProvider>
       </body>
