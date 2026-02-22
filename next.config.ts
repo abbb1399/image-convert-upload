@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "20mb",
     },
   },
+  outputFileTracingIncludes: {
+    "/api/convert": ["./node_modules/ffmpeg-static/**"],
+  },
   serverExternalPackages: ["fluent-ffmpeg", "ffmpeg-static"],
 };
 
