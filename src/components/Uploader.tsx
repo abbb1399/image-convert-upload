@@ -35,7 +35,9 @@ export function Uploader() {
       }
 
       setFiles((prevFiles) =>
-        prevFiles.map((f) => (f.id === fileId ? { ...f, isDeleting: true } : f))
+        prevFiles.map((f) =>
+          f.id === fileId ? { ...f, isDeleting: true } : f,
+        ),
       );
 
       const deleteFileResponse = await fetch("/api/s3/delete", {
@@ -49,8 +51,8 @@ export function Uploader() {
 
         setFiles((prevFiles) =>
           prevFiles.map((f) =>
-            f.id === fileId ? { ...f, isDeleting: false, error: true } : f
-          )
+            f.id === fileId ? { ...f, isDeleting: false, error: true } : f,
+          ),
         );
 
         return;
@@ -64,15 +66,15 @@ export function Uploader() {
 
       setFiles((prevFiles) =>
         prevFiles.map((f) =>
-          f.id === fileId ? { ...f, isDeleting: false, error: true } : f
-        )
+          f.id === fileId ? { ...f, isDeleting: false, error: true } : f,
+        ),
       );
     }
   }
 
   const uploadFile = async (file: File) => {
     setFiles((prevFiles) =>
-      prevFiles.map((f) => (f.file === file ? { ...f, uploading: true } : f))
+      prevFiles.map((f) => (f.file === file ? { ...f, uploading: true } : f)),
     );
 
     try {
@@ -94,8 +96,8 @@ export function Uploader() {
           prevFiles.map((f) =>
             f.file === file
               ? { ...f, uploading: false, progress: 0, error: true }
-              : f
-          )
+              : f,
+          ),
         );
 
         return;
@@ -114,8 +116,8 @@ export function Uploader() {
               prevFiles.map((f) =>
                 f.file === file
                   ? { ...f, progress: Math.round(percentComplete), key: key }
-                  : f
-              )
+                  : f,
+              ),
             );
           }
         };
@@ -127,8 +129,8 @@ export function Uploader() {
               prevFiles.map((f) =>
                 f.file === file
                   ? { ...f, progress: 100, uploading: false, error: false }
-                  : f
-              )
+                  : f,
+              ),
             );
 
             toast.success("파일 업로드 성공");
@@ -154,8 +156,8 @@ export function Uploader() {
         prevFiles.map((f) =>
           f.file === file
             ? { ...f, uploading: false, progress: 0, error: true }
-            : f
-        )
+            : f,
+        ),
       );
     }
   };
@@ -185,11 +187,11 @@ export function Uploader() {
   const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
     if (fileRejections.length > 0) {
       const tooManyFiles = fileRejections.find(
-        (fileRejections) => fileRejections.errors[0].code === "too-many-files"
+        (fileRejections) => fileRejections.errors[0].code === "too-many-files",
       );
 
       const fileTooLarge = fileRejections.find(
-        (fileRejections) => fileRejections.errors[0].code === "file-too-large"
+        (fileRejections) => fileRejections.errors[0].code === "file-too-large",
       );
 
       if (tooManyFiles) {
@@ -226,27 +228,19 @@ export function Uploader() {
     <>
       <Card
         className={cn(
-          "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-64",
+          "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-64 cursor-pointer",
           isDragActive
             ? "border-primary bg-primary/10 border-solid"
-            : "border-border hover:border-primary"
+            : "border-border hover:border-primary",
         )}
         {...getRootProps()}
       >
-        <CardContent className="flex flex-col items-center justify-center h-full w-full">
+        <CardContent className="flex flex-col items-center justify-center h-full w-full gap-y-3">
           <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>
-              파일을 여기에 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
-            </p>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full w-full gap-y-3">
-              <p>
-                파일을 여기에 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
-              </p>
-              <Button>파일 선택</Button>
-            </div>
-          )}
+          <p className="text-center text-muted-foreground">
+            이미지를 드래그하거나 클릭하여 선택하세요
+          </p>
+          <p className="text-xs text-muted-foreground">최대 5개, 각 5MB</p>
         </CardContent>
       </Card>
 
