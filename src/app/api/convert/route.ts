@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       status: 200,
       headers: {
         "Content-Type": "image/webp",
-        "Content-Disposition": `attachment; filename="${originalName}.webp"`,
+        "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(originalName + ".webp")}`,
         "Content-Length": webpBuffer.length.toString(),
       },
     });
