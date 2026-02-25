@@ -91,6 +91,16 @@ export function Converter() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected: (rejectedFiles) => {
+      const error = rejectedFiles[0]?.errors[0];
+      if (error?.code === "file-too-large") {
+        toast.error("파일이 너무 큽니다. 4.5MB 이하의 파일만 업로드할 수 있습니다.");
+      } else if (error?.code === "file-invalid-type") {
+        toast.error("이미지 파일만 업로드할 수 있습니다.");
+      } else {
+        toast.error("업로드할 수 없는 파일입니다.");
+      }
+    },
     maxFiles: 1,
     maxSize: 1024 * 1024 * 4.5,
     accept: { "image/*": [] },
