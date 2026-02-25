@@ -35,13 +35,20 @@ export function Converter() {
       });
 
       if (!response.ok) {
+        const statusMessages: Record<number, string> = {
+          400: "잘못된 요청입니다.",
+          413: "파일이 너무 큽니다. 4MB 이하의 파일만 업로드할 수 있습니다.",
+          500: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        };
         const text = await response.text();
-        let message = "변환 실패";
-        try {
-          const json = JSON.parse(text);
-          message = json.error || message;
-        } catch {
-          // HTML 에러 페이지 등 JSON이 아닌 경우
+
+        let message = statusMessages[response.status] ?? "변환 실패";
+        if (!statusMessages[response.status]) {
+          try {
+            message = JSON.parse(text).error || message;
+          } catch (e) {
+            console.error("알 수 없는 오류 응답:", e);
+          }
         }
         throw new Error(message);
       }
@@ -92,7 +99,7 @@ export function Converter() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 1,
-    maxSize: 1024 * 1024 * 20,
+    maxSize: 1024 * 1024 * 4,
     accept: { "image/*": [] },
     disabled: isConverting,
   });
@@ -119,7 +126,7 @@ export function Converter() {
               <p className="text-center text-muted-foreground">
                 이미지를 드래그하거나 클릭하여 선택하세요
               </p>
-              <p className="text-xs text-muted-foreground">최대 20MB</p>
+              <p className="text-xs text-muted-foreground">최대 4MB</p>
             </>
           )}
 
